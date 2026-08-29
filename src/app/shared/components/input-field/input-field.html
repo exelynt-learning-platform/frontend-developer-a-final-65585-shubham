@@ -1,0 +1,21 @@
+<div>
+  <label class="input-label">
+    {{ label() }}
+    @if (required()) {
+      <span class="text-red-500">*</span>
+    }
+  </label>
+
+  <input
+    [type]="type()"
+    [placeholder]="placeholder()"
+    [value]="value()"
+    (input)="onInput($event)"
+    (blur)="blurred.emit()"
+    [class]="errorMessage() ? 'input-field input-field-error' : 'input-field'"
+  />
+
+  @if (errorMessage()) {
+    <p class="input-error-text">{{ errorMessage() }}</p>
+  }
+</div>

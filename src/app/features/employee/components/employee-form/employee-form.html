@@ -1,0 +1,143 @@
+@if (open()) {
+  <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="surface-card w-full max-w-lg p-6 my-8">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900">
+          {{ isEdit() ? 'Edit Employee' : 'Add Employee' }}
+        </h3>
+        <button (click)="onClose()" class="text-gray-400 hover:text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      @if (submitError()) {
+        <div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-700">
+          {{ submitError() }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          <!-- Name -->
+          <div>
+            <label class="input-label">Name <span class="text-red-500">*</span></label>
+            <input
+              type="text"
+              formControlName="name"
+              [class]="f.name.invalid && f.name.touched ? 'input-field input-field-error' : 'input-field'"
+            />
+            @if (f.name.invalid && f.name.touched) {
+              <p class="input-error-text">
+                @if (f.name.errors?.['required']) { Name is required }
+                @if (f.name.errors?.['minlength']) { Name must be at least 2 characters }
+                @if (f.name.errors?.['maxlength']) { Name must be at most 50 characters }
+              </p>
+            }
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="input-label">Email <span class="text-red-500">*</span></label>
+            <input
+              type="email"
+              formControlName="email"
+              [class]="f.email.invalid && f.email.touched ? 'input-field input-field-error' : 'input-field'"
+            />
+            @if (f.email.invalid && f.email.touched) {
+              <p class="input-error-text">
+                @if (f.email.errors?.['required']) { Email is required }
+                @if (f.email.errors?.['email']) { Enter a valid email address }
+                @if (f.email.errors?.['maxlength']) { Email must be at most 100 characters }
+              </p>
+            }
+          </div>
+
+          <!-- Mobile -->
+          <div>
+            <label class="input-label">Mobile <span class="text-red-500">*</span></label>
+            <input
+              type="tel"
+              formControlName="mobile"
+              [class]="f.mobile.invalid && f.mobile.touched ? 'input-field input-field-error' : 'input-field'"
+            />
+            @if (f.mobile.invalid && f.mobile.touched) {
+              <p class="input-error-text">
+                @if (f.mobile.errors?.['required']) { Mobile number is required }
+                @if (f.mobile.errors?.['pattern']) { Enter a valid mobile number (10-13 digits) }
+              </p>
+            }
+          </div>
+
+          <!-- Country -->
+          <div>
+            <label class="input-label">Country <span class="text-red-500">*</span></label>
+            <select
+  formControlName="country"
+  [class]="f.country.invalid && f.country.touched ? 'input-field input-field-error' : 'input-field'"
+>
+  <option value="" disabled selected>Select country</option>
+  @for (c of countries(); track c.id) {
+    <option [value]="c.country">{{ c.country }}</option>
+  }
+</select>
+            @if (f.country.invalid && f.country.touched) {
+              <p class="input-error-text">Country is required</p>
+            }
+          </div>
+
+          <!-- State -->
+          <div>
+            <label class="input-label">State <span class="text-red-500">*</span></label>
+            <input
+              type="text"
+              formControlName="state"
+              [class]="f.state.invalid && f.state.touched ? 'input-field input-field-error' : 'input-field'"
+            />
+            @if (f.state.invalid && f.state.touched) {
+              <p class="input-error-text">
+                @if (f.state.errors?.['required']) { State is required }
+                @if (f.state.errors?.['maxlength']) { State must be at most 50 characters }
+              </p>
+            }
+          </div>
+
+          <!-- District -->
+          <div>
+            <label class="input-label">District <span class="text-red-500">*</span></label>
+            <input
+              type="text"
+              formControlName="district"
+              [class]="f.district.invalid && f.district.touched ? 'input-field input-field-error' : 'input-field'"
+            />
+            @if (f.district.invalid && f.district.touched) {
+              <p class="input-error-text">
+                @if (f.district.errors?.['required']) { District is required }
+                @if (f.district.errors?.['maxlength']) { District must be at most 50 characters }
+              </p>
+            }
+          </div>
+
+        </div>
+
+        <!-- Footer actions -->
+        <div class="mt-6 flex justify-end gap-3">
+          <button type="button" (click)="onClose()" [disabled]="loading()" class="btn-secondary">
+            Cancel
+          </button>
+          <button type="submit" [disabled]="loading()" class="btn-primary">
+            @if (loading()) {
+              <span class="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            }
+            {{ isEdit() ? 'Save Changes' : 'Add Employee' }}
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+}
